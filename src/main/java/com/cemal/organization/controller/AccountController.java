@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cemal.organization.model.AuthToken;
 import com.cemal.organization.model.LoginUser;
+import com.cemal.organization.model.RegistrationRequest;
 import com.cemal.organization.model.TokenResponse;
 import com.cemal.organization.model.User;
 import com.cemal.organization.repository.UserRepo;
@@ -50,10 +51,10 @@ public class AccountController {
         return ResponseEntity.ok(new TokenResponse(request.getUsername(), token));
     }
 
-   /* @RequestMapping(value = "/register", method = RequestMethod.POST)
+   @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<Boolean> register(@RequestBody RegistrationRequest registrationRequest) throws AuthenticationException {
         Boolean response = userService.register(registrationRequest);
         return ResponseEntity.ok(response);
-    }*/
+    }
 
 }

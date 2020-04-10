@@ -8,14 +8,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+import com.cemal.organization.model.RegistrationRequest;
 import com.cemal.organization.model.User;
 import com.cemal.organization.repository.UserRepo;
 import com.cemal.organization.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.*;
+
+import javax.transaction.Transactional;
 
 
 @Service(value = "userService")
+@Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
 	
 	@Autowired
@@ -57,6 +64,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	
         return userRepo.save(newUser);
     }
+	@Transactional
+	public Boolean register(RegistrationRequest registrationRequest) {
+		try {
+			User user = new User();
+			user.setE_mail(registrationRequest.getEmail());
+			user.setPassword(bcryptEncoder.encode(registrationRequest.getPassword()));
+			user.setUsername(registrationRequest.getUsername());
+			System.out.println(user);
+			userRepo.save(user);
+
+			return Boolean.TRUE;
+		} catch (Exception e) {
+			log.error("REGISTRATION=>", e);
+			return Boolean.FALSE;
+		}
+	}
 
 	@Override
 	public List<User> findAll() {

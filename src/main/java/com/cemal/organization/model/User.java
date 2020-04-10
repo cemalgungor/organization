@@ -1,7 +1,5 @@
 package com.cemal.organization.model;
 
-
-
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
@@ -22,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.JoinColumn;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,19 +29,18 @@ import javax.persistence.JoinColumn;
 @Table(name = "users")
 public class User {
 	@Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-     Long id;
-    @Column
-   String username;
-    @Column
-    String password;
-    @ManyToMany
-    @JoinTable( 
-        name = "users_roles", 
-        joinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "role_id", referencedColumnName = "id")) 
-    private Collection<Role> roles;
-   
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	Long id;
+	@Column
+	String username;
+	@Column
+	String password;
+	@Column
+	String e_mail;
+	@ManyToMany
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private Collection<Role> roles;
+	
+	private boolean isEnabled;
+
 }
