@@ -2,7 +2,9 @@ package com.cemal.organization.model;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +41,13 @@ public class ConfirmationToken {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade= 
+    		CascadeType.MERGE)
 	@JoinColumn(nullable = false, name = "id")
     private User user;
+    public ConfirmationToken(User user,String token) {
+        this.user = user;
+        createdDate = new Date();
+        confirmationToken = token;
+    }
 }

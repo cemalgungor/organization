@@ -1,19 +1,19 @@
 package com.cemal.organization.model;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import org.hibernate.mapping.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,11 +36,19 @@ public class User {
 	@Column
 	String password;
 	@Column
-	String e_mail;
+	String email;
 	@ManyToMany
-	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-	private Collection<Role> roles;
-	
+	@JoinTable(name = "users_roles", 
+	joinColumns =
+	@JoinColumn(name = "user_id", referencedColumnName = "id"), 
+	inverseJoinColumns = 
+	@JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private Collection<Role> role;
+
+	@Column
 	private boolean isEnabled;
+
+
+
 
 }

@@ -1,6 +1,7 @@
 package com.cemal.organization.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 
 import com.cemal.organization.model.RegistrationRequest;
+import com.cemal.organization.model.Role;
 import com.cemal.organization.model.User;
+import com.cemal.organization.repository.RoleRepository;
 import com.cemal.organization.repository.UserRepo;
 import com.cemal.organization.service.UserService;
 
@@ -24,7 +27,8 @@ import javax.transaction.Transactional;
 @Service(value = "userService")
 @Slf4j
 public class UserServiceImpl implements UserDetailsService, UserService {
-	
+	@Autowired
+	private RoleRepository roleRepo;
 	@Autowired
 	private UserRepo userRepo;
 
@@ -41,14 +45,26 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	private Set<SimpleGrantedAuthority> getAuthority(User user) {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-		user.getRoles().forEach(role -> {
+ 
+	/*	user.getRole().forEach(role -> {
 			//authorities.add(new SimpleGrantedAuthority(role.getName()));
+			System.out.println(role.getName());
             authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-		});
+		});*/
+		for (Role role : user.getRole()) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+             }
 		return authorities;
 		//return Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
+	/*   @Override
+	    public Collection<? extends GrantedAuthority> getAuthority(User user) {
+	        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
 
+	        list.add(new SimpleGrantedAuthority("ROLE_" +user.getRole()));
+
+	        return list;
+	    }*/
 
 	
        @Override
@@ -65,13 +81,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepo.save(newUser);
     }
 	@Transactional
-	public Boolean register(RegistrationRequest registrationRequest) {
+	public Boolean register(User user2) {
 		try {
 			User user = new User();
-			user.setE_mail(registrationRequest.getEmail());
-			user.setPassword(bcryptEncoder.encode(registrationRequest.getPassword()));
-			user.setUsername(registrationRequest.getUsername());
-			System.out.println(user);
+			user.setEmail(user2.getEmail());
+			user.setPassword(bcryptEncoder.encode(user2.getPassword()));
+			user.setUsername(user2.getUsername());
+			Role adminRole = roleRepo.findByName("USER");
+			user.setRole(Arrays.asList(adminRole));
+			System.out.println(""+user.getRole().size());
 			userRepo.save(user);
 
 			return Boolean.TRUE;
@@ -98,5 +116,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

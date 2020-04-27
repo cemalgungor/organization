@@ -42,7 +42,7 @@ public class ProductController {
 		return ResponseEntity.ok(productServiceImpl.updateProduct(product));
 
 	}
-	@PreAuthorize("hasRole('USER')")
+	//@PreAuthorize("hasRole('USER')")
 	@PostMapping
 	public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) {
 		return ResponseEntity.ok(productServiceImpl.addProduct(product));
